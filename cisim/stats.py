@@ -43,14 +43,6 @@ class binomCI:
         where each objects has x(calculated value) and and other info
         """
 
-        # 制約条件を算出する
-        def cons(x):
-            return -(abs(x - 0.5) - 0.5)
-
-        cons = (
-            {'type': 'ineq', 'fun': cons}
-        )
-
         # 信頼上限
         upper = minimize_scalar(
             self.diff_of_tail_area_and_cl, bounds=[0, 1], args=(self.n_x, 'left'), method='Bounded'
