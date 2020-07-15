@@ -60,4 +60,4 @@ class binomCI:
             self.diff_of_tail_area_and_cl, bounds=[0, 1], args=(self.n_x,  'right'), method='Bounded'
         )
 
-        return [lower, upper]
+        return [lower.x, upper.x]
