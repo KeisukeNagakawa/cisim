@@ -3,7 +3,7 @@ from scipy.stats import binom
 from scipy.optimize import minimize_scalar
 
 
-class binomCI:
+class BinomCI:
     """
     二項分布に関するクラス
     """
@@ -54,3 +54,16 @@ class binomCI:
         )
 
         return [lower, upper]
+
+
+class HyperCI:
+    """
+    超幾何分布に関するクラス
+    """
+
+    def __init__(self, n_pop, k_s, n_draw, k_s_obs, n_s, cl=0.05):
+        self.n_pop = n_pop
+        self.k_s = k_s
+        self.n_draw = n_draw
+        self.k_s_obs = k_s_obs
+        self.n_s = n_s
