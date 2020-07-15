@@ -39,7 +39,8 @@ class binomCI:
         シミュレーションによって信頼区間を算出する。
         :param ul: 上側確率（upper）か、下側確率（lower）か。
         :param debug: True if debug
-        :return: sequence like [lower, upper]
+        :return: sequence of objects like [lower, upper],
+        where each objects has x(calculated value) and and other info
         """
 
         # 制約条件を算出する
@@ -57,7 +58,7 @@ class binomCI:
 
         # 信頼下限
         lower = minimize_scalar(
-            self.diff_of_tail_area_and_cl, bounds=[0, 1], args=(self.n_x,  'right'), method='Bounded'
+            self.diff_of_tail_area_and_cl, bounds=[0, 1], args=(self.n_x, 'right'), method='Bounded'
         )
 
-        return [lower.x, upper.x]
+        return [lower, upper]

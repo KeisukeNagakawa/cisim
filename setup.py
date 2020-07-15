@@ -12,7 +12,7 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='sample',
+    name='cisim',
     version='0.1.0',
     description='Package for simulationg confidence interval of Binomial distribution and Hypergemetric distribution',
     long_description=readme,
