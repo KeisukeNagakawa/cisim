@@ -43,7 +43,7 @@ class BinomCI:
         where each objects has x(calculated value) and and other info
         """
 
-        p_obs = self.n_obs/self.n_pop
+        p_obs = self.n_obs / self.n_pop
         # 信頼上限
         upper = minimize_scalar(
             self.diff_of_tail_area_and_cl, bounds=[p_obs, 1], args=('left'), method='Bounded'
@@ -103,7 +103,7 @@ class HyperCI:
         """
 
         # 信頼上限
-        k_s_expected = int(round(self.k_s_obs/self.n_draw*self.n_pop))
+        k_s_expected = int(round(self.k_s_obs / self.n_draw * self.n_pop))
 
         upper = minimize(
             self.diff_of_tail_area_and_cl,
@@ -120,9 +120,13 @@ class HyperCI:
             method='nelder-mead',
             options={'xatol': 1e-8, 'disp': debug}
         )
-
+        # 信頼区間
+        interval = [int(round(lower.x[0])), int(round(upper.x[0]))]
+        # 信頼区間の幅の半分を期待値で割った値
+        delta_ratio = (interval[1] - interval[0]) * 0.5 / k_s_expected
         res = {
-            'interval': [int(round(lower.x[0])), int(round(upper.x[0]))],
+            'interval': interval,
+            'delta_ratio': delta_ratio,
             'detail': {
                 'upper': upper,
                 'lower': lower
