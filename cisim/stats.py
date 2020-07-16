@@ -43,14 +43,15 @@ class BinomCI:
         where each objects has x(calculated value) and and other info
         """
 
+        p_obs = self.n_obs/self.n_pop
         # 信頼上限
         upper = minimize_scalar(
-            self.diff_of_tail_area_and_cl, bounds=[0, 1], args=('left'), method='Bounded'
+            self.diff_of_tail_area_and_cl, bounds=[p_obs, 1], args=('left'), method='Bounded'
         )
 
         # 信頼下限
         lower = minimize_scalar(
-            self.diff_of_tail_area_and_cl, bounds=[0, 1], args=('right'), method='Bounded'
+            self.diff_of_tail_area_and_cl, bounds=[0, p_obs], args=('right'), method='Bounded'
         )
 
         res = {
@@ -68,9 +69,8 @@ class HyperCI:
     超幾何分布に関するクラス
     """
 
-    def __init__(self, n_pop, k_s, n_draw, k_s_obs, cl=0.05):
+    def __init__(self, n_pop, n_draw, k_s_obs, cl=0.05):
         self.n_pop = n_pop
-        self.k_s = k_s
         self.n_draw = n_draw
         self.k_s_obs = k_s_obs
         self.cl = cl
@@ -112,7 +112,7 @@ class HyperCI:
         )
 
         res = {
-            'interval': [lower.x, upper.x],
+            'interval': [int(lower.x), int(upper.x)],
             'detail': {
                 'upper': upper,
                 'lower': lower
