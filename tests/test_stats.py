@@ -30,8 +30,6 @@ class TestHyperCI(TestCase):
         self.assertEqual(res, 0.7908367991741947)
 
     def test_ci_sim(self):
-        h = HyperCI(n_pop=10**7, n_draw=10**5, k_s_obs=100)
+        h = HyperCI(n_pop=10**4, n_draw=10**3, k_s_obs=100)
         res = h.ci_sim()
-        print(res['interval'])
-        print(res['detail']['upper'])
-        self.assertEqual(1, 1)
+        self.assertEqual(res['interval'], [830, 1193])

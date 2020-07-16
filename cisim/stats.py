@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.stats import binom, hypergeom
-from scipy.optimize import minimize_scalar
+from scipy.optimize import minimize, minimize_scalar
 
 
 class BinomCI:
@@ -77,6 +77,7 @@ class HyperCI:
 
     def diff_of_tail_area_and_cl(self, k_s_x, lf='left'):
         """
+        :param k_s_x: 母集団の中の成功数
         :param lf: レフトテイル（left）かライトテイル（right）か
         :return:lf='left'の場合は[0:k_s_t+1]の区間における確率分布の面積を、
         lf='right'の場合は[k_s_t:n_pop+1]における確率分布の面積を算出し、
@@ -102,17 +103,26 @@ class HyperCI:
         """
 
         # 信頼上限
-        upper = minimize_scalar(
-            self.diff_of_tail_area_and_cl, bounds=[0, self.n_pop], args=('left'), method='Bounded'
+        k_s_expected = int(round(self.k_s_obs/self.n_draw*self.n_pop))
+
+        upper = minimize(
+            self.diff_of_tail_area_and_cl,
+            x0=k_s_expected,
+            args=('left'),
+            method='nelder-mead',
+            options={'xatol': 1e-8, 'disp': debug}
         )
 
-        # 信頼下限
-        lower = minimize_scalar(
-            self.diff_of_tail_area_and_cl, bounds=[0, self.n_pop], args=('right'), method='Bounded'
+        lower = minimize(
+            self.diff_of_tail_area_and_cl,
+            x0=k_s_expected,
+            args=('right'),
+            method='nelder-mead',
+            options={'xatol': 1e-8, 'disp': debug}
         )
 
         res = {
-            'interval': [int(lower.x), int(upper.x)],
+            'interval': [int(round(lower.x[0])), int(round(upper.x[0]))],
             'detail': {
                 'upper': upper,
                 'lower': lower
