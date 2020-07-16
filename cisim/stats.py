@@ -123,7 +123,10 @@ class HyperCI:
         # 信頼区間
         interval = [int(round(lower.x[0])), int(round(upper.x[0]))]
         # 信頼区間の幅の半分を期待値で割った値
-        delta_ratio = (interval[1] - interval[0]) * 0.5 / k_s_expected
+        if k_s_expected != 0:
+            delta_ratio = (interval[1] - interval[0]) * 0.5 / k_s_expected
+        else:
+            delta_ratio = np.nan
         res = {
             'interval': interval,
             'delta_ratio': delta_ratio,
