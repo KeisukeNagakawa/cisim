@@ -1,4 +1,4 @@
-Confidence Interval Simulation Module Repository
+Confidence Interval Simulation(CISim) Repository
 =================================================
 
 For a hypergeometric distribution, denoted by :math:`Hyper(n_pop, k_s, n_draw)`, where :math:`n_pop` is the population size, :math:`k_s` is the number of population with 'success', and :math:`n_draw` is the given sample size, this program calculates the confidence interval for :math:`k_s` when :math:`n_pop` is known, using simulation scipy optimization tools.
