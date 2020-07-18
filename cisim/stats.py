@@ -3,7 +3,26 @@ from scipy.optimize import minimize, minimize_scalar
 from cerberus import Validator
 from .schemas import schema_binom, schema_hyper
 
-class BinomCI:
+
+def format_result(interval, lower_result, upper_result):
+    """
+    :param interval: sequence of numbers
+    :param lower_result: <class 'scipy.optimize.optimize.OptimizeResult'>
+    :param upper_result: <class 'scipy.optimize.optimize.OptimizeResult'>
+    :return: unpacked value as follows,
+        interval, success, detail
+    """
+    success = upper_result['success'] and lower_result['success']  # True if all calculation terminated safely.
+    detail = {'upper': upper_result, 'lower': lower_result}
+    return interval, detail, success
+
+
+class CI:
+    def __init__(self):
+        pass
+
+
+class BinomCI(CI):
     """
     Class on Binomial Distribution's Confidence Interval
     """
@@ -17,7 +36,6 @@ class BinomCI:
         self.n_obs = n_obs  # number of observed success
         self.cl = cl  # confidence level
         self.p_obs = self.n_obs / self.n_pop
-
 
     def diff_of_tail_area_and_cl(self, p, lf='left'):
         """
@@ -57,15 +75,8 @@ class BinomCI:
         lower = minimize_scalar(
             self.diff_of_tail_area_and_cl, bounds=[0, self.p_obs], args=('right'), method='Bounded'
         )
-
-        res = {
-            'interval': [lower.x, upper.x],
-            'detail': {
-                'upper': upper,
-                'lower': lower
-            }
-        }
-        return res
+        interval = [lower.x, upper.x]
+        return format_result(interval, upper, lower)
 
 
 class HyperCI:
@@ -74,7 +85,7 @@ class HyperCI:
     """
 
     def __init__(self, n_pop, n_draw, k_s_obs, cl=0.05):
-        input_arg = {'n_pop': n_pop, 'n_draw': n_draw, 'k_s_obs':k_s_obs, 'cl': cl}
+        input_arg = {'n_pop': n_pop, 'n_draw': n_draw, 'k_s_obs': k_s_obs, 'cl': cl}
         v = Validator(schema_hyper)
         if not v.validate(input_arg):
             raise ValueError(v.errors)
@@ -128,11 +139,4 @@ class HyperCI:
         )
         # confidence interval
         interval = [int(round(lower.x[0])), int(round(upper.x[0]))]
-        res = {
-            'interval': interval,
-            'detail': {
-                'upper': upper,
-                'lower': lower
-            }
-        }
-        return res
+        return format_result(interval, upper, lower)

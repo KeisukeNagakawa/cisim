@@ -12,7 +12,7 @@ class Testbinom(TestCase):
         res = b.ci_sim()
         self.assertEqual(
             [0.049005430267763495, 0.17622473596973592],
-            res['interval']
+            res[0]
         )
 
 
@@ -37,4 +37,4 @@ class TestHyperCI(TestCase):
     def test_ci_sim(self):
         h = HyperCI(n_pop=10 ** 4, n_draw=10 ** 3, k_s_obs=100)
         res = h.ci_sim()
-        self.assertEqual(res['interval'], [830, 1193])
+        self.assertEqual(res[0], [830, 1193])
