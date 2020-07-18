@@ -1,6 +1,7 @@
-import numpy as np
 from scipy.stats import binom, hypergeom
 from scipy.optimize import minimize, minimize_scalar
+from cerberus import Validator
+from .schemas import schema_binom, schema_hyper
 
 
 class BinomCI:
@@ -9,6 +10,10 @@ class BinomCI:
     """
 
     def __init__(self, n_pop, n_obs, cl=0.05):
+        v = Validator(schema_binom)
+        input_arg = {'n_pop': n_pop, 'n_obs': n_obs, 'cl': cl}
+        if not v.validate(input_arg):
+            raise ValueError(v.errors)
         self.n_pop = n_pop  # number of all trials
         self.n_obs = n_obs  # number of observed success
         self.cl = cl  # confidence level
@@ -25,13 +30,15 @@ class BinomCI:
         """
         if abs(p - 0.5) >= 0.5:
             # used when p<0 or p>1, which may occur in optimizing
+            # do not raise error here. It causes to stop optimizing.
             return 100000
+
         if lf == 'left':  # calc left tail
             return abs(binom.cdf(self.n_obs, self.n_pop, p) - self.cl * 0.5)
         elif lf == 'right':  # calc right tail
             return abs(1 - binom.cdf(self.n_obs - 1, self.n_pop, p) - self.cl * 0.5)
         else:
-            return 100000
+            raise TypeError('lf must be "left" or "right"')
 
     def ci_sim(self, debug=False):
         """
@@ -67,6 +74,10 @@ class HyperCI:
     """
 
     def __init__(self, n_pop, n_draw, k_s_obs, cl=0.05):
+        input_arg = {'n_pop': n_pop, 'n_draw': n_draw, 'k_s_obs':k_s_obs, 'cl': cl}
+        v = Validator(schema_hyper)
+        if not v.validate(input_arg):
+            raise ValueError(v.errors)
         self.n_pop = n_pop
         self.n_draw = n_draw
         self.k_s_obs = k_s_obs
@@ -89,7 +100,7 @@ class HyperCI:
                 1 - hypergeom.cdf(self.k_s_obs - 1, self.n_pop, k_s_x, self.n_draw) - self.cl * 0.5
             )
         else:
-            return 100000
+            raise TypeError('lf must be "left" or "right"')
 
     def ci_sim(self, debug=False):
         """
@@ -102,7 +113,7 @@ class HyperCI:
 
         upper = minimize(
             self.diff_of_tail_area_and_cl,
-            x0=k_s_expected,
+            x0=[k_s_expected],
             args=('left'),
             method='nelder-mead',
             options={'xatol': 1e-8, 'disp': debug}
