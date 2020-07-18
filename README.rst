@@ -4,12 +4,18 @@ Confidence Interval of Hypergeometric Distribution Calculating Module
 For a hypergeometric distribution, denoted by :math:`Hyper(n_pop, k_s, n_draw)`, where :math:`n_pop` is the population size, :math:`k_s` is the number of population with 'success', and :math:`n_draw` is the given sample size, this program calculates the confidence interval for :math:`k_s` when :math:`n_pop` is known and number of observed success is given as :math:`k_s_obs`, using simulation scipy optimization tools.
 
 
+First, you need to install these packages; cerberus(for validating args), scipy(optimiziation), and numpy(for calculation). And after that, pip install cisim.
+
 shell
 
 .. code-block:: shell
 
+    pip install cerberus scipy numpy
     pip install cisim
 
+
+
+After the pip-install, you can calculate the interval of a Hypergeometric distribution as follows.
 
 python
 
