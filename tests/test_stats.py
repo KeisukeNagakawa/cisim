@@ -5,7 +5,9 @@ from cisim.stats import BinomCI, HyperCI
 class Testbinom(TestCase):
 
     def test_validation(self):
+        self.assertRaises(ValueError, BinomCI, -100, 10, 0.05)
         self.assertRaises(ValueError, BinomCI, 100, -10, 0.05)
+        self.assertRaises(ValueError, BinomCI, 100, 10, -0.05)
 
     def test_ci_sim(self):
         b = BinomCI(n_pop=100, n_obs=10, cl=0.05)
@@ -18,9 +20,12 @@ class Testbinom(TestCase):
 
 class TestHyperCI(TestCase):
     def test_validation(self):
+        self.assertRaises(ValueError, HyperCI, -100, 20, 5)
         self.assertRaises(ValueError, HyperCI, 100, -20, 5)
+        self.assertRaises(ValueError, HyperCI, 100, 20, -5)
 
     def test_hypergeom_cdf_lower(self):
+        # check hypergeom cdf to return right value
         from scipy.stats import hypergeom
         h = HyperCI(n_pop=100, n_draw=20, k_s_obs=5)
         k_s = 30

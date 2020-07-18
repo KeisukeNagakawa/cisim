@@ -12,7 +12,8 @@ def format_result(interval, lower_result, upper_result):
     :return: unpacked value as follows,
         interval, success, detail
     """
-    success = upper_result['success'] and lower_result['success']  # True if all calculation terminated safely.
+    # True if all calculation terminated safely
+    success = upper_result['success'] and lower_result['success']
     detail = {'upper': upper_result, 'lower': lower_result}
     return interval, detail, success
 
@@ -39,6 +40,7 @@ class BinomCI(CI):
 
     def diff_of_tail_area_and_cl(self, p, lf='left'):
         """
+        Calculate left/right tail probability minus (confidence level)*0.5 for binomial distribution.
         :param n_t: threshold for number of success
         :param lf: left tail or right tail
         :param p: success probability
@@ -51,7 +53,6 @@ class BinomCI(CI):
             # used when p<0 or p>1, which may occur in optimizing
             # do not raise error here. It causes to stop optimizing.
             return 100000
-
         if lf == 'left':  # calc left tail
             return abs(binom.cdf(self.n_obs, self.n_pop, p) - self.cl * 0.5)
         elif lf == 'right':  # calc right tail
@@ -61,7 +62,7 @@ class BinomCI(CI):
 
     def ci_sim(self, debug=False):
         """
-        calculate confidence interval
+        calculate confidence interval of binomial distribution using scipy minimize with Bounded method.
         :param debug: True if debug
         :return: objects. Important attribute is 'interval', which has sequence of lower and upper confidence level.
         """
@@ -70,7 +71,6 @@ class BinomCI(CI):
         upper = minimize_scalar(
             self.diff_of_tail_area_and_cl, bounds=[self.p_obs, 1], args=('left'), method='Bounded'
         )
-
         # lower confidence level
         lower = minimize_scalar(
             self.diff_of_tail_area_and_cl, bounds=[0, self.p_obs], args=('right'), method='Bounded'
@@ -96,6 +96,7 @@ class HyperCI:
 
     def diff_of_tail_area_and_cl(self, k_s_x, lf='left'):
         """
+        Calculate left/right tail probability minus (confidence level)*0.5 for hypergeometric distribution.
         :param k_s_x: number of success in the population
         :param lf: left tail or right tail
         :return:
@@ -113,8 +114,9 @@ class HyperCI:
         else:
             raise TypeError('lf must be "left" or "right"')
 
-    def ci_sim(self, debug=False):
+    def ci_sim(self, method='nedler-mead', debug=False):
         """
+        Calculate confidence interval of hypergeometric distribution using scipy minimize with nedler-mead method.
         :param debug:
         :return: objects. Important attribute is 'interval', which has sequence of lower and upper confidence level.
         """
@@ -124,9 +126,9 @@ class HyperCI:
 
         upper = minimize(
             self.diff_of_tail_area_and_cl,
-            x0=[k_s_expected],
+            x0=k_s_expected,
             args=('left'),
-            method='nelder-mead',
+            method=method,
             options={'xatol': 1e-8, 'disp': debug}
         )
 
@@ -134,7 +136,7 @@ class HyperCI:
             self.diff_of_tail_area_and_cl,
             x0=k_s_expected,
             args=('right'),
-            method='nelder-mead',
+            method=method,
             options={'xatol': 1e-8, 'disp': debug}
         )
         # confidence interval
