@@ -114,7 +114,7 @@ class HyperCI:
         else:
             raise TypeError('lf must be "left" or "right"')
 
-    def ci_sim(self, method='nedler-mead', debug=False):
+    def ci_sim(self, method='nelder-mead', debug=False):
         """
         Calculate confidence interval of hypergeometric distribution using scipy minimize with nedler-mead method.
         :param debug:

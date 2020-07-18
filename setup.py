@@ -11,7 +11,7 @@ with open('LICENSE') as f:
 
 setup(
     name='cisim',
-    version='0.2.0',
+    version='1.0.0',
     description='Package for simulating confidence interval of Binomial distribution and Hypergeometric distribution',
     long_description=readme,
     author='Keisuke Nagakawa',
