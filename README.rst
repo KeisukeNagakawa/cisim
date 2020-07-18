@@ -19,7 +19,7 @@ For a hypergeometric distribution, denoted by :math:`Hyper(n_pop, k_s, n_draw)`,
     from cisim.stats import HyperCI
     h = HyperCI(n_pop=10**4, n_draw=10**3, k_s_obs=100)
     res = h.ci_sim()
-    print(res['interval'])
+    print(res[0])
     >>> [830, 1193]
 
 
@@ -32,7 +32,7 @@ And this program can also calculate confidence interaval for binomial distributi
     from cisim.stats import BinomCI
     b = BinomCI(n_pop=100, n_obs=10, cl=0.05)
     res = b.ci_sim()
-    print(b.ci_sim()['interval'])
+    print(res[0])
     >>> [0.049005430267763495, 0.17622473596973592]
 
 
