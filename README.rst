@@ -38,6 +38,8 @@ And this program can also calculate confidence interaval for binomial distributi
 
 
 
+You can check and compare the result with Clopper-Pearson approach on `cluster-text.com <http://www.cluster-text.com/confidence_interval.php>`_
+
 
 Learn more at `HyperGeometric distribution <http://www.kennethreitz.org/essays/repository-structure-and-python>`_, `Binomial Distribution <https://ja.wikipedia.org/wiki/%E4%BA%8C%E9%A0%85%E5%88%86%E5%B8%83>`_
 
