@@ -13,8 +13,8 @@ with open('LICENSE') as f:
 
 setup(
     name='cisim',
-    version='0.1.0',
-    description='Package for simulationg confidence interval of Binomial distribution and Hypergemetric distribution',
+    version='0.2.0',
+    description='Package for simulating confidence interval of Binomial distribution and Hypergemetric distribution',
     long_description=readme,
     author='Keisuke Nagakawa',
     author_email='kay@amunzen.com',
