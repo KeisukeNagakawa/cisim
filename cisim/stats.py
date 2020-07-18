@@ -3,7 +3,6 @@ from scipy.optimize import minimize, minimize_scalar
 from cerberus import Validator
 from .schemas import schema_binom, schema_hyper
 
-
 class BinomCI:
     """
     Class on Binomial Distribution's Confidence Interval
@@ -17,6 +16,8 @@ class BinomCI:
         self.n_pop = n_pop  # number of all trials
         self.n_obs = n_obs  # number of observed success
         self.cl = cl  # confidence level
+        self.p_obs = self.n_obs / self.n_pop
+
 
     def diff_of_tail_area_and_cl(self, p, lf='left'):
         """
@@ -47,15 +48,14 @@ class BinomCI:
         :return: objects. Important attribute is 'interval', which has sequence of lower and upper confidence level.
         """
 
-        p_obs = self.n_obs / self.n_pop
         # upper confidence level
         upper = minimize_scalar(
-            self.diff_of_tail_area_and_cl, bounds=[p_obs, 1], args=('left'), method='Bounded'
+            self.diff_of_tail_area_and_cl, bounds=[self.p_obs, 1], args=('left'), method='Bounded'
         )
 
         # lower confidence level
         lower = minimize_scalar(
-            self.diff_of_tail_area_and_cl, bounds=[0, p_obs], args=('right'), method='Bounded'
+            self.diff_of_tail_area_and_cl, bounds=[0, self.p_obs], args=('right'), method='Bounded'
         )
 
         res = {
