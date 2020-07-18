@@ -3,22 +3,23 @@
 from setuptools import setup, find_packages
 
 
-with open('README.rst') as f:
-    readme = f.read()
+with open('PyPIDescription.rst') as f:
+    desc = f.read()
 
 with open('LICENSE') as f:
     license = f.read()
 
 setup(
     name='cisim',
-    version='1.0.2',
+    version='1.0.8',
     description='Package for simulating confidence interval of Binomial distribution and Hypergeometric distribution',
-    # long_description=readme,
+    long_description=desc,
+    long_description_content_type='text/x-rst',
     author='Keisuke Nagakawa',
-    author_email='kay@amunzen.com',
+    author_email='keisuke.n.37@gmail.com',
     install_requires=['numpy', 'scipy', 'cerberus'],
     url='https://github.com/KeisukeNagakawa/cisim',
-    license=license,
+    license="MIT",
     packages=find_packages(exclude=('tests', 'docs'))
 )
 
